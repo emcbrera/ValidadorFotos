@@ -35,6 +35,12 @@ public class Usuario {
     @Column(name = "usua_password_hash", nullable = false)
     private String passwordHash;
 
+    @Column(name = "usua_token_recuperacion", length = 255)
+    private String tokenRecuperacion;
+
+    @Column(name = "usua_token_expiracion")
+    private LocalDateTime tokenExpiracion;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "usua_id_estado_fk")
     private Estado estado;
