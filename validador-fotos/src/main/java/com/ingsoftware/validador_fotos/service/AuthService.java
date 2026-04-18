@@ -14,6 +14,7 @@ import com.ingsoftware.validador_fotos.security.JwtService;
 import java.time.LocalDateTime;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
@@ -30,6 +31,10 @@ public class AuthService {
     private final UsuarioRepository usuarioRepository;
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
+    private final EmailService emailService;
+
+    @Value("${app.frontend.reset-url}")
+    private String resetPasswordUrl;
 
     public AuthResponse authenticate(LoginRequest request) {
         try {
@@ -66,12 +71,28 @@ public class AuthService {
         usuario.setTokenExpiracion(expiracion);
         usuarioRepository.save(usuario);
 
+        String enlaceRecuperacion = resetPasswordUrl + "?token=" + token;
+        String cuerpoCorreo = """
+                Hola,
+
+                Recibimos una solicitud para restablecer tu contrasena en Validador Fotos.
+
+                Usa el siguiente enlace para crear una nueva contrasena:
+                %s
+
+                Este enlace expirara en 30 minutos.
+
+                Si no solicitaste este cambio, puedes ignorar este mensaje.
+                """.formatted(enlaceRecuperacion);
+
+        emailService.sendSimpleEmail(
+                usuario.getCorreo(),
+                "Recuperacion de contrasena - Validador Fotos",
+                cuerpoCorreo);
+
         return ForgotPasswordResponse.builder()
-                .mensaje("Solicitud de recuperacion generada correctamente")
+                .mensaje("Se envio un enlace de recuperacion al correo registrado")
                 .correo(usuario.getCorreo())
-                .tokenRecuperacion(token)
-                .expiraEn(expiracion)
-                .enlaceRecuperacion("http://localhost:8080/reset-password?token=" + token)
                 .build();
     }
 
