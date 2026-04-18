@@ -1,0 +1,98 @@
+<section class="login-page">
+  <!-- Fondo animado -->
+  <div class="bg-animation">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+  </div>
+
+  <!-- Card de login -->
+  <div class="login-container">
+    <div class="login-card">
+
+      <!-- Header -->
+      <div class="login-header">
+        <div class="logo-wrapper">
+          <i class="bi bi-shield-lock-fill logo-icon"></i>
+        </div>
+        <h1 class="login-title">Bienvenido</h1>
+        <p class="login-subtitle">Ingresa tus credenciales para continuar</p>
+      </div>
+
+      <!-- Error alert -->
+      <div class="alert-error" *ngIf="showError" role="alert">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+        {{ errorMessage }}
+      </div>
+
+      <!-- Form -->
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" novalidate>
+
+        <!-- Email -->
+        <div class="form-group">
+          <label for="email" class="form-label">Correo electrónico</label>
+          <div class="input-wrapper" [class.input-error]="emailCtrl.invalid && emailCtrl.touched">
+            <i class="bi bi-envelope-fill input-icon"></i>
+            <input
+              id="email"
+              type="email"
+              class="form-control custom-input"
+              formControlName="email"
+              placeholder="usuario@empresa.com"
+              autocomplete="email"
+            />
+          </div>
+          <div class="error-msg" *ngIf="emailCtrl.invalid && emailCtrl.touched">
+            <span *ngIf="emailCtrl.errors?.['required']">El correo es requerido</span>
+            <span *ngIf="emailCtrl.errors?.['email']">Ingresa un correo válido</span>
+          </div>
+        </div>
+
+        <!-- Password -->
+        <div class="form-group">
+          <label for="password" class="form-label">Contraseña</label>
+          <div class="input-wrapper" [class.input-error]="passwordCtrl.invalid && passwordCtrl.touched">
+            <i class="bi bi-lock-fill input-icon"></i>
+            <input
+              id="password"
+              [type]="showPassword ? 'text' : 'password'"
+              class="form-control custom-input"
+              formControlName="password"
+              placeholder="••••••••"
+              autocomplete="current-password"
+            />
+            <button type="button" class="toggle-password" (click)="togglePassword()" aria-label="Mostrar contraseña">
+              <i class="bi" [class.bi-eye-fill]="!showPassword" [class.bi-eye-slash-fill]="showPassword"></i>
+            </button>
+          </div>
+          <div class="error-msg" *ngIf="passwordCtrl.invalid && passwordCtrl.touched">
+            <span *ngIf="passwordCtrl.errors?.['required']">La contraseña es requerida</span>
+            <span *ngIf="passwordCtrl.errors?.['minlength']">Mínimo 6 caracteres</span>
+          </div>
+        </div>
+
+        <!-- Botón submit -->
+        <button
+          id="btn-login"
+          type="submit"
+          class="btn-login"
+          [disabled]="isLoading"
+        >
+          <span *ngIf="!isLoading">
+            <i class="bi bi-box-arrow-in-right me-2"></i>Iniciar sesión
+          </span>
+          <span *ngIf="isLoading" class="d-flex align-items-center justify-content-center gap-2">
+            <span class="spinner"></span>Verificando...
+          </span>
+        </button>
+
+      </form>
+
+      <!-- Footer -->
+      <div class="login-footer">
+        <p>¿Olvidaste tu contraseña? <a href="#" class="forgot-link">Recupérala aquí</a></p>
+      </div>
+
+    </div>
+  </div>
+</section>
