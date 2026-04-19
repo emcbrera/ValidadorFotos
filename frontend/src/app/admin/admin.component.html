@@ -1,0 +1,145 @@
+<div class="admin-dashboard">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="logo-ico">
+        <i class="bi bi-shield-lock-fill"></i>
+      </div>
+      <span class="logo-text">Validador<b>Fotos</b></span>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a href="#" class="nav-item active">
+        <i class="bi bi-grid-1x2-fill"></i>
+        <span>Dashboard</span>
+      </a>
+      <a href="#" class="nav-item">
+        <i class="bi bi-people-fill"></i>
+        <span>Estudiantes</span>
+      </a>
+      <a href="#" class="nav-item">
+        <i class="bi bi-card-checklist"></i>
+        <span>Validaciones</span>
+      </a>
+      <a href="#" class="nav-item">
+        <i class="bi bi-gear-fill"></i>
+        <span>Configuración</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <button (click)="logout()" class="btn-logout">
+        <i class="bi bi-box-arrow-left"></i>
+        <span>Cerrar Sesión</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <header class="top-nav">
+      <div class="search-bar">
+        <i class="bi bi-search"></i>
+        <input type="text" placeholder="Buscar validaciones...">
+      </div>
+      <div class="user-profile">
+        <div class="notifications">
+          <i class="bi bi-bell"></i>
+          <span class="badge">3</span>
+        </div>
+        <div class="v-divider"></div>
+        <span class="user-name">{{ userName }}</span>
+        <div class="avatar">
+           <i class="bi bi-person-circle"></i>
+        </div>
+      </div>
+    </header>
+
+    <div class="content-wrapper">
+      <div class="welcome-section">
+        <h1 class="welcome-title">Bienvenido, {{ userName }}</h1>
+        <p class="welcome-text">Panel de administración para la validación de registros fotográficos.</p>
+      </div>
+
+      <!-- Mock Stats -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon purple">
+            <i class="bi bi-person-plus-fill"></i>
+          </div>
+          <div class="stat-info">
+            <span class="stat-value">124</span>
+            <span class="stat-label">Nuevos Registros</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon blue">
+            <i class="bi bi-clock-history"></i>
+          </div>
+          <div class="stat-info">
+            <span class="stat-value">15</span>
+            <span class="stat-label">Pendientes</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon green">
+            <i class="bi bi-check-circle-fill"></i>
+          </div>
+          <div class="stat-info">
+            <span class="stat-value">89</span>
+            <span class="stat-label">Aprobados</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon red">
+            <i class="bi bi-x-circle-fill"></i>
+          </div>
+          <div class="stat-info">
+            <span class="stat-value">2</span>
+            <span class="stat-label">Rechazados</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Placeholder for more admin stuff -->
+      <div class="recent-table-card card-glass">
+        <div class="card-header">
+          <h2 class="card-title">Validaciones Recientes (Datos de Prueba)</h2>
+          <button class="btn-view-all">Ver todos</button>
+        </div>
+        <div class="table-container">
+          <table class="custom-table">
+            <thead>
+              <tr>
+                <th>Estudiante</th>
+                <th>Fecha</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Juan Perez</td>
+                <td>2024-05-20</td>
+                <td><span class="status-badge pending">Pendiente</span></td>
+                <td><button class="btn-action">Revisar</button></td>
+              </tr>
+              <tr>
+                <td>Maria Garcia</td>
+                <td>2024-05-19</td>
+                <td><span class="status-badge approved">Aprobado</span></td>
+                <td><button class="btn-action">Detalles</button></td>
+              </tr>
+              <tr>
+                <td>Carlos Lopez</td>
+                <td>2024-05-18</td>
+                <td><span class="status-badge pending">Pendiente</span></td>
+                <td><button class="btn-action">Revisar</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>

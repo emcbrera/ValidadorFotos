@@ -24,5 +24,17 @@ export const routes: Routes = [
       import('./dashboard/dashboard.component').then(m => m.DashboardComponent),
     canActivate: [authGuard]
   },
+  {
+    path: 'admin',
+    loadComponent: () =>
+      import('./admin/admin.component').then(m => m.AdminComponent),
+    canActivate: [authGuard]
+  },
+  {
+    path: 'estudiante',
+    loadComponent: () =>
+      import('./estudiante/estudiante.component').then(m => m.EstudianteComponent),
+    canActivate: [authGuard]
+  },
   { path: '**', redirectTo: 'login' }
 ];
