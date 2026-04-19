@@ -9,6 +9,16 @@ export const routes: Routes = [
       import('./login/login.component').then(m => m.LoginComponent)
   },
   {
+    path: 'forgot-password',
+    loadComponent: () =>
+      import('./forgot-password/forgot-password.component').then(m => m.ForgotPasswordComponent)
+  },
+  {
+    path: 'reset-password',
+    loadComponent: () =>
+      import('./reset-password/reset-password.component').then(m => m.ResetPasswordComponent)
+  },
+  {
     path: 'dashboard',
     loadComponent: () =>
       import('./dashboard/dashboard.component').then(m => m.DashboardComponent),

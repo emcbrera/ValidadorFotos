@@ -1,22 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, tap, map } from 'rxjs';
-
-export interface User {
-  email: string;
-  name: string;
-  role: string;
-}
-
-export interface AuthResponse {
-  token: string;
-  tokenType: string;
-  expiresIn: number;
-  username: string;
-  correo: string;
-  rol: string;
-  mensaje: string;
-}
+import { Observable, tap } from 'rxjs';
+import { ForgotPasswordRequest } from '../schemas/request/forgot-password-request';
+import { LoginRequest } from '../schemas/request/login-request';
+import { ResetPasswordRequest } from '../schemas/request/reset-password-request';
+import { AuthResponse } from '../schemas/response/auth-response';
+import { ForgotPasswordResponse } from '../schemas/response/forgot-password-response';
+import { ResetPasswordResponse } from '../schemas/response/reset-password-response';
+import { User } from '../schemas/response/user-response';
 
 @Injectable({
   providedIn: 'root'
@@ -30,7 +21,9 @@ export class AuthService {
   constructor(private http: HttpClient) {}
 
   login(identificador: string, password: string): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.API_URL}/login`, { identificador, password })
+    const request: LoginRequest = { identificador, password };
+
+    return this.http.post<AuthResponse>(`${this.API_URL}/login`, request)
       .pipe(
         tap(response => {
           if (response.token) {
@@ -44,6 +37,16 @@ export class AuthService {
           }
         })
       );
+  }
+
+  forgotPassword(correo: string): Observable<ForgotPasswordResponse> {
+    const request: ForgotPasswordRequest = { correo };
+    return this.http.post<ForgotPasswordResponse>(`${this.API_URL}/forgot-password`, request);
+  }
+
+  resetPassword(token: string, nuevaPassword: string): Observable<ResetPasswordResponse> {
+    const request: ResetPasswordRequest = { token, nuevaPassword };
+    return this.http.post<ResetPasswordResponse>(`${this.API_URL}/reset-password`, request);
   }
 
   logout(): void {

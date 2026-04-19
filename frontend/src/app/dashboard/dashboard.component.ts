@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { AuthService, User } from '../core/auth.service';
+import { AuthService } from '../core/auth.service';
+import { User } from '../schemas/response/user-response';
 
 @Component({
   selector: 'app-dashboard',
