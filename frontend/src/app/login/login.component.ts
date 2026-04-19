@@ -26,15 +26,26 @@ export class LoginComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Si ya esta logueado, redirigir al dashboard
+    // Si ya esta logueado, redirigir según rol
     if (this.authService.isLoggedIn()) {
-      this.router.navigate(['/dashboard']);
+      this.redirectByRole();
     }
 
     this.loginForm = this.fb.group({
       email: ['', [Validators.required]],
       password: ['', [Validators.required, Validators.minLength(6)]]
     });
+  }
+
+  private redirectByRole(): void {
+    const user = this.authService.getCurrentUser();
+    if (user?.role === 'Administrador') {
+      this.router.navigate(['/admin']);
+    } else if (user?.role === 'Estudiante') {
+      this.router.navigate(['/estudiante']);
+    } else {
+      this.router.navigate(['/dashboard']);
+    }
   }
 
   get emailCtrl() { return this.loginForm.get('email')!; }
@@ -58,7 +69,7 @@ export class LoginComponent implements OnInit {
     this.authService.login(email, password).subscribe({
       next: (response) => {
         this.isLoading = false;
-        this.router.navigate(['/dashboard']);
+        this.redirectByRole();
       },
       error: (error: HttpErrorResponse) => {
         this.isLoading = false;

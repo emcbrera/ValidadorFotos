@@ -1,0 +1,122 @@
+<div class="student-page">
+  <!-- Top Bar -->
+  <header class="top-bar">
+    <div class="logo">
+      <i class="bi bi-shield-lock-fill"></i>
+      <span>Validador<b>Fotos</b></span>
+    </div>
+    <div class="user-actions">
+      <span class="user-welcome">Hola, <b>{{ userName }}</b></span>
+      <button (click)="logout()" class="btn-icon-logout" title="Cerrar Sesión">
+        <i class="bi bi-box-arrow-right"></i>
+      </button>
+    </div>
+  </header>
+
+  <main class="content">
+    <div class="form-container card-glass">
+      <div class="form-header">
+        <h1 class="form-title">Registro de Datos Personales</h1>
+        <p class="form-subtitle">Completa tu información para la validación de identidad.</p>
+      </div>
+
+      <div class="alert-success" *ngIf="showSuccess">
+        <i class="bi bi-check-circle-fill"></i>
+        <span>¡Datos guardados temporalmente con éxito! (Modo Simulación)</span>
+      </div>
+
+      <form [formGroup]="registrationForm" (ngSubmit)="onSubmit()" class="registration-form">
+        
+        <!-- Sección: Nombres y Apellidos -->
+        <div class="form-section">
+          <h2 class="section-title"><i class="bi bi-person-fill"></i> Información Básica</h2>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="primerNombre">Primer Nombre*</label>
+              <input type="text" id="primerNombre" formControlName="primerNombre" placeholder="Ej. Juan">
+            </div>
+            <div class="form-group">
+              <label for="segundoNombre">Segundo Nombre</label>
+              <input type="text" id="segundoNombre" formControlName="segundoNombre" placeholder="Ej. Antonio">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="primerApellido">Primer Apellido*</label>
+              <input type="text" id="primerApellido" formControlName="primerApellido" placeholder="Ej. Pérez">
+            </div>
+            <div class="form-group">
+              <label for="segundoApellido">Segundo Apellido</label>
+              <input type="text" id="segundoApellido" formControlName="segundoApellido" placeholder="Ej. García">
+            </div>
+          </div>
+        </div>
+
+        <!-- Sección: Identificación -->
+        <div class="form-section">
+          <h2 class="section-title"><i class="bi bi-card-heading"></i> Identificación y Género</h2>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="tipoDoc">Tipo de Documento*</label>
+              <select id="tipoDoc" formControlName="tipoDoc">
+                <option value="">Seleccione...</option>
+                <option value="CC">Cédula de Ciudadanía</option>
+                <option value="TI">Tarjeta de Identidad</option>
+                <option value="CE">Cédula de Extranjería</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="numeroDoc">Número de Documento*</label>
+              <input type="text" id="numeroDoc" formControlName="numeroDoc" placeholder="123456789">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="genero">Género*</label>
+              <select id="genero" formControlName="genero">
+                <option value="">Seleccione...</option>
+                <option value="Masculino">Masculino</option>
+                <option value="Femenino">Femenino</option>
+                <option value="Otro">Otro</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="celular">Celular*</label>
+              <input type="text" id="celular" formControlName="celular" placeholder="3001234567">
+            </div>
+          </div>
+        </div>
+
+        <!-- Sección: Contacto y Foto -->
+        <div class="form-section">
+          <h2 class="section-title"><i class="bi bi-envelope-at-fill"></i> Contacto y Multimedia</h2>
+          <div class="form-group full-width">
+            <label for="correo">Correo Electrónico*</label>
+            <input type="email" id="correo" formControlName="correo" placeholder="usuario@ejemplo.com">
+          </div>
+          <div class="form-group full-width">
+            <label for="foto">Fotografía de Perfil</label>
+            <div class="file-upload-wrapper">
+              <input type="file" id="foto" (change)="onFileChange($event)" accept="image/*" class="file-input">
+              <div class="file-dummy">
+                <i class="bi bi-camera-fill"></i>
+                <span>Haz clic para subir o arrastra una imagen</span>
+                <p class="file-name" *ngIf="registrationForm.get('foto')?.value">{{ registrationForm.get('foto')?.value }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn-submit" [disabled]="isSubmitting">
+            <span *ngIf="!isSubmitting">Guardar Información (Temporal)</span>
+            <span *ngIf="isSubmitting" class="spinner-container">
+              <span class="spinner"></span> Procesando...
+            </span>
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </main>
+</div>

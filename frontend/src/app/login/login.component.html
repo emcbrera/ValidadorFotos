@@ -1,96 +1,79 @@
 <section class="login-page">
-  <!-- Fondo animado -->
-  <div class="bg-animation">
-    <div class="blob blob-1"></div>
-    <div class="blob blob-2"></div>
-    <div class="blob blob-3"></div>
+  <!-- Fondo Institucional -->
+  <div class="institutional-bg">
+    <div class="stripe-top"></div>
+    <div class="stripe-bottom"></div>
   </div>
 
-  <!-- Card de login -->
   <div class="login-container">
     <div class="login-card">
 
-      <!-- Header -->
+      <!-- Header Institucional -->
       <div class="login-header">
-        <div class="logo-wrapper">
-          <i class="bi bi-shield-lock-fill logo-icon"></i>
+        <div class="logo-container">
+          <!-- Placeholder para el logo oficial de la UNIAJC -->
+          <img src="https://www.uniajc.edu.co/wp-content/uploads/2021/03/logo-uniajc.png" alt="Logo UNIAJC"
+            class="institutional-logo"
+            onerror="this.style.display='none'; document.getElementById('logo-fallback').style.display='flex'">
+          <div id="logo-fallback" class="logo-fallback" style="display: none;">
+            <i class="bi bi-mortarboard-fill"></i>
+          </div>
         </div>
-        <h1 class="login-title">Bienvenido</h1>
-        <p class="login-subtitle">Ingresa tus credenciales para continuar</p>
+        <h2 class="institution-name">Institución Universitaria</h2>
+        <h1 class="institution-brand">Antonio José Camacho</h1>
+        <p class="login-subtitle">Sistema de Validación Fotográfica</p>
       </div>
 
-      <!-- Error alert -->
+      <!-- Alerta de Error -->
       <div class="alert-error" *ngIf="showError" role="alert">
-        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+        <i class="bi bi-exclamation-circle-fill me-2"></i>
         {{ errorMessage }}
       </div>
 
-      <!-- Form -->
+      <!-- Formulario -->
       <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" novalidate>
 
-        <!-- Email -->
         <div class="form-group">
-          <label for="email" class="form-label">Correo electrónico</label>
-          <div class="input-wrapper" [class.input-error]="emailCtrl.invalid && emailCtrl.touched">
-            <i class="bi bi-envelope-fill input-icon"></i>
-            <input
-              id="email"
-              type="email"
-              class="form-control custom-input"
-              formControlName="email"
-              placeholder="usuario@empresa.com"
-              autocomplete="email"
-            />
+          <label for="email" class="form-label">Usuario o Correo</label>
+          <div class="input-field" [class.input-invalid]="emailCtrl.invalid && emailCtrl.touched">
+            <i class="bi bi-person-bounding-box"></i>
+            <input id="email" type="text" class="form-control-institutional" formControlName="email"
+              placeholder="Ingresa tu identificador" autocomplete="username" />
           </div>
-          <div class="error-msg" *ngIf="emailCtrl.invalid && emailCtrl.touched">
-            <span *ngIf="emailCtrl.errors?.['required']">El correo es requerido</span>
-            <span *ngIf="emailCtrl.errors?.['email']">Ingresa un correo válido</span>
+          <div class="field-error" *ngIf="emailCtrl.invalid && emailCtrl.touched">
+            <span *ngIf="emailCtrl.errors?.['required']">Este campo es obligatorio</span>
           </div>
         </div>
 
-        <!-- Password -->
         <div class="form-group">
           <label for="password" class="form-label">Contraseña</label>
-          <div class="input-wrapper" [class.input-error]="passwordCtrl.invalid && passwordCtrl.touched">
-            <i class="bi bi-lock-fill input-icon"></i>
-            <input
-              id="password"
-              [type]="showPassword ? 'text' : 'password'"
-              class="form-control custom-input"
-              formControlName="password"
-              placeholder="••••••••"
-              autocomplete="current-password"
-            />
-            <button type="button" class="toggle-password" (click)="togglePassword()" aria-label="Mostrar contraseña">
-              <i class="bi" [class.bi-eye-fill]="!showPassword" [class.bi-eye-slash-fill]="showPassword"></i>
+          <div class="input-field" [class.input-invalid]="passwordCtrl.invalid && passwordCtrl.touched">
+            <i class="bi bi-key-fill"></i>
+            <input id="password" [type]="showPassword ? 'text' : 'password'" class="form-control-institutional"
+              formControlName="password" placeholder="••••••••" autocomplete="current-password" />
+            <button type="button" class="btn-toggle-view" (click)="togglePassword()">
+              <i class="bi" [class.bi-eye]="!showPassword" [class.bi-eye-slash]="showPassword"></i>
             </button>
           </div>
-          <div class="error-msg" *ngIf="passwordCtrl.invalid && passwordCtrl.touched">
-            <span *ngIf="passwordCtrl.errors?.['required']">La contraseña es requerida</span>
+          <div class="field-error" *ngIf="passwordCtrl.invalid && passwordCtrl.touched">
+            <span *ngIf="passwordCtrl.errors?.['required']">La contraseña es obligatoria</span>
             <span *ngIf="passwordCtrl.errors?.['minlength']">Mínimo 6 caracteres</span>
           </div>
         </div>
 
-        <!-- Botón submit -->
-        <button
-          id="btn-login"
-          type="submit"
-          class="btn-login"
-          [disabled]="isLoading"
-        >
-          <span *ngIf="!isLoading">
-            <i class="bi bi-box-arrow-in-right me-2"></i>Iniciar sesión
-          </span>
-          <span *ngIf="isLoading" class="d-flex align-items-center justify-content-center gap-2">
-            <span class="spinner"></span>Verificando...
+        <button type="submit" class="btn-institutional-primary" [disabled]="isLoading">
+          <span *ngIf="!isLoading">INGRESAR AL SISTEMA</span>
+          <span *ngIf="isLoading" class="loader-container">
+            <span class="dot-loader"></span> Verificando...
           </span>
         </button>
 
       </form>
 
-      <!-- Footer -->
       <div class="login-footer">
-        <p>¿Olvidaste tu contraseña? <a href="#" class="forgot-link">Recupérala aquí</a></p>
+        <a href="#" class="link-secondary">¿Olvidaste tu contraseña?</a>
+        <div class="footer-divider"></div>
+        <p class="copyright">&copy; 2026 UNIAJC - Todos los derechos reservados</p>
       </div>
 
     </div>
