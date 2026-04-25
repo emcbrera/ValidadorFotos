@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
@@ -23,8 +24,9 @@ public class DatosPersonaService {
     private final DatosPersonaRepository datosPersonaRepository;
     private final EstadoRepository estadoRepository;
     private final UsuarioRepository usuarioRepository;
+    private final FotoStorageService fotoStorageService;
 
-    public DatosPersonaResponse registrarDatosPersonales(DatosPersonaRequest request) {
+    public DatosPersonaResponse registrarDatosPersonales(DatosPersonaRequest request, MultipartFile foto) {
         CustomUserDetails userDetails = getAuthenticatedUser();
         Integer usuarioId = userDetails.getId();
 
@@ -36,6 +38,7 @@ public class DatosPersonaService {
                 .orElseThrow(() -> new IllegalStateException("No fue posible encontrar el usuario autenticado"));
         Estado estadoPendiente = estadoRepository.findById(ESTADO_PENDIENTE_ID)
                 .orElseThrow(() -> new IllegalStateException("No fue posible encontrar el estado pendiente"));
+        String nombreFoto = fotoStorageService.guardarFoto(foto, usuarioId);
 
         DatosPersona datosPersona = new DatosPersona();
         datosPersona.setUsuario(usuario);
@@ -48,7 +51,7 @@ public class DatosPersonaService {
         datosPersona.setCorreo(request.correo());
         datosPersona.setGenero(request.genero());
         datosPersona.setCelular(request.celular());
-        datosPersona.setFoto(request.foto());
+        datosPersona.setFoto(nombreFoto);
         datosPersona.setEstado(estadoPendiente);
 
         DatosPersona registroGuardado = datosPersonaRepository.save(datosPersona);

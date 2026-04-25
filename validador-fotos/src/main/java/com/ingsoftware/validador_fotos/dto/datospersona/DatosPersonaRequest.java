@@ -40,10 +40,28 @@ public record DatosPersonaRequest(
         @NotBlank(message = "El celular es obligatorio")
         @Size(max = 50, message = "El celular no puede superar los 50 caracteres")
         @Pattern(regexp = "^[0-9+\\-\\s]+$", message = "El celular contiene caracteres no permitidos")
-        String celular,
-
-        @NotBlank(message = "La foto es obligatoria")
-        @Size(max = 255, message = "La referencia de la foto no puede superar los 255 caracteres")
-        String foto
+        String celular
 ) {
+    public static DatosPersonaRequest fromFormData(
+            String primerNombre,
+            String segundoNombre,
+            String primerApellido,
+            String segundoApellido,
+            String tipoDocumento,
+            Integer numeroDocumento,
+            String correo,
+            String genero,
+            String celular) {
+        return new DatosPersonaRequest(
+                primerNombre,
+                segundoNombre,
+                primerApellido,
+                segundoApellido,
+                tipoDocumento,
+                numeroDocumento,
+                correo,
+                genero,
+                celular
+        );
+    }
 }
