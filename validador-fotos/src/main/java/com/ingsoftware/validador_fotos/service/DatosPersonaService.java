@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class DatosPersonaService {
 
     private static final Integer ESTADO_PENDIENTE_ID = 5;
+    private static final String FOTO_PUBLIC_PATH = "/uploads/fotos/";
 
     private final DatosPersonaRepository datosPersonaRepository;
     private final EstadoRepository estadoRepository;
@@ -69,9 +70,18 @@ public class DatosPersonaService {
                 .genero(registroGuardado.getGenero())
                 .celular(registroGuardado.getCelular())
                 .foto(registroGuardado.getFoto())
+                .fotoUrl(construirFotoUrl(registroGuardado.getFoto()))
                 .estado(registroGuardado.getEstado() != null ? registroGuardado.getEstado().getDescripcion() : null)
                 .mensaje("Datos personales registrados correctamente")
                 .build();
+    }
+
+    private String construirFotoUrl(String nombreFoto) {
+        if (nombreFoto == null || nombreFoto.isBlank()) {
+            return null;
+        }
+
+        return FOTO_PUBLIC_PATH + nombreFoto;
     }
 
     private CustomUserDetails getAuthenticatedUser() {

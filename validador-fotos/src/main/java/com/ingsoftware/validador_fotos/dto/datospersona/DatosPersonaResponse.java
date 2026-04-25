@@ -16,6 +16,7 @@ public record DatosPersonaResponse(
         String genero,
         String celular,
         String foto,
+        String fotoUrl,
         String estado,
         String mensaje
 ) {
