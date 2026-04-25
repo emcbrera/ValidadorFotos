@@ -9,6 +9,7 @@ import com.ingsoftware.validador_fotos.repository.DatosPersonaRepository;
 import com.ingsoftware.validador_fotos.repository.EstadoRepository;
 import com.ingsoftware.validador_fotos.repository.UsuarioRepository;
 import com.ingsoftware.validador_fotos.security.CustomUserDetails;
+import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -57,23 +58,65 @@ public class DatosPersonaService {
 
         DatosPersona registroGuardado = datosPersonaRepository.save(datosPersona);
 
-        return DatosPersonaResponse.builder()
-                .id(registroGuardado.getId())
-                .usuarioId(usuario.getId())
-                .primerNombre(registroGuardado.getPrimerNombre())
-                .segundoNombre(registroGuardado.getSegundoNombre())
-                .primerApellido(registroGuardado.getPrimerApellido())
-                .segundoApellido(registroGuardado.getSegundoApellido())
-                .tipoDocumento(registroGuardado.getTipoDocumento())
-                .numeroDocumento(registroGuardado.getNumeroDocumento())
-                .correo(registroGuardado.getCorreo())
-                .genero(registroGuardado.getGenero())
-                .celular(registroGuardado.getCelular())
-                .foto(registroGuardado.getFoto())
-                .fotoUrl(construirFotoUrl(registroGuardado.getFoto()))
-                .estado(registroGuardado.getEstado() != null ? registroGuardado.getEstado().getDescripcion() : null)
-                .mensaje("Datos personales registrados correctamente")
-                .build();
+        return mapToResponse(registroGuardado, "Datos personales registrados correctamente");
+    }
+
+    public DatosPersonaResponse obtenerDatosPersonalesDelEstudiante() {
+        CustomUserDetails userDetails = getAuthenticatedUser();
+
+        DatosPersona datosPersona = datosPersonaRepository.findByUsuarioId(userDetails.getId())
+                .orElseThrow(() -> new NoSuchElementException("El estudiante no tiene datos personales registrados"));
+
+        return mapToResponse(datosPersona, "Datos personales consultados correctamente");
+    }
+
+    public DatosPersonaResponse actualizarDatosPersonales(DatosPersonaRequest request) {
+        CustomUserDetails userDetails = getAuthenticatedUser();
+
+        DatosPersona datosPersona = datosPersonaRepository.findByUsuarioId(userDetails.getId())
+                .orElseThrow(() -> new NoSuchElementException("El estudiante no tiene datos personales registrados"));
+
+        aplicarDatosFormulario(datosPersona, request);
+
+        DatosPersona registroActualizado = datosPersonaRepository.save(datosPersona);
+
+        return mapToResponse(registroActualizado, "Datos personales actualizados correctamente");
+    }
+
+    public DatosPersonaResponse eliminarFotoActual() {
+        CustomUserDetails userDetails = getAuthenticatedUser();
+
+        DatosPersona datosPersona = datosPersonaRepository.findByUsuarioId(userDetails.getId())
+                .orElseThrow(() -> new NoSuchElementException("El estudiante no tiene datos personales registrados"));
+
+        if (datosPersona.getFoto() == null || datosPersona.getFoto().isBlank()) {
+            throw new IllegalStateException("El estudiante no tiene una fotografia registrada");
+        }
+
+        fotoStorageService.eliminarFoto(datosPersona.getFoto());
+        datosPersona.setFoto(null);
+
+        DatosPersona registroActualizado = datosPersonaRepository.save(datosPersona);
+
+        return mapToResponse(registroActualizado, "Fotografia eliminada correctamente");
+    }
+
+    public DatosPersonaResponse reemplazarFotoActual(MultipartFile nuevaFoto) {
+        CustomUserDetails userDetails = getAuthenticatedUser();
+
+        DatosPersona datosPersona = datosPersonaRepository.findByUsuarioId(userDetails.getId())
+                .orElseThrow(() -> new NoSuchElementException("El estudiante no tiene datos personales registrados"));
+
+        if (datosPersona.getFoto() != null && !datosPersona.getFoto().isBlank()) {
+            fotoStorageService.eliminarFoto(datosPersona.getFoto());
+        }
+
+        String nombreNuevaFoto = fotoStorageService.guardarFoto(nuevaFoto, userDetails.getId());
+        datosPersona.setFoto(nombreNuevaFoto);
+
+        DatosPersona registroActualizado = datosPersonaRepository.save(datosPersona);
+
+        return mapToResponse(registroActualizado, "Fotografia actualizada correctamente");
     }
 
     private String construirFotoUrl(String nombreFoto) {
@@ -82,6 +125,38 @@ public class DatosPersonaService {
         }
 
         return FOTO_PUBLIC_PATH + nombreFoto;
+    }
+
+    private void aplicarDatosFormulario(DatosPersona datosPersona, DatosPersonaRequest request) {
+        datosPersona.setPrimerNombre(request.primerNombre());
+        datosPersona.setSegundoNombre(request.segundoNombre());
+        datosPersona.setPrimerApellido(request.primerApellido());
+        datosPersona.setSegundoApellido(request.segundoApellido());
+        datosPersona.setTipoDocumento(request.tipoDocumento());
+        datosPersona.setNumeroDocumento(request.numeroDocumento());
+        datosPersona.setCorreo(request.correo());
+        datosPersona.setGenero(request.genero());
+        datosPersona.setCelular(request.celular());
+    }
+
+    private DatosPersonaResponse mapToResponse(DatosPersona datosPersona, String mensaje) {
+        return DatosPersonaResponse.builder()
+                .id(datosPersona.getId())
+                .usuarioId(datosPersona.getUsuario() != null ? datosPersona.getUsuario().getId() : null)
+                .primerNombre(datosPersona.getPrimerNombre())
+                .segundoNombre(datosPersona.getSegundoNombre())
+                .primerApellido(datosPersona.getPrimerApellido())
+                .segundoApellido(datosPersona.getSegundoApellido())
+                .tipoDocumento(datosPersona.getTipoDocumento())
+                .numeroDocumento(datosPersona.getNumeroDocumento())
+                .correo(datosPersona.getCorreo())
+                .genero(datosPersona.getGenero())
+                .celular(datosPersona.getCelular())
+                .foto(datosPersona.getFoto())
+                .fotoUrl(construirFotoUrl(datosPersona.getFoto()))
+                .estado(datosPersona.getEstado() != null ? datosPersona.getEstado().getDescripcion() : null)
+                .mensaje(mensaje)
+                .build();
     }
 
     private CustomUserDetails getAuthenticatedUser() {

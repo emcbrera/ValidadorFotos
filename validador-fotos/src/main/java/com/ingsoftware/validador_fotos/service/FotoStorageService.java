@@ -57,6 +57,19 @@ public class FotoStorageService {
         }
     }
 
+    public void eliminarFoto(String nombreArchivo) {
+        if (nombreArchivo == null || nombreArchivo.isBlank()) {
+            return;
+        }
+
+        try {
+            Path archivo = storagePath.resolve(nombreArchivo).normalize();
+            Files.deleteIfExists(archivo);
+        } catch (IOException ex) {
+            throw new IllegalStateException("No fue posible eliminar la fotografia almacenada", ex);
+        }
+    }
+
     private void validarArchivo(MultipartFile archivo) {
         if (archivo == null || archivo.isEmpty()) {
             throw new IllegalStateException("La fotografia es obligatoria");
