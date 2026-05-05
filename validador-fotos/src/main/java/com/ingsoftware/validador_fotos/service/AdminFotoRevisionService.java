@@ -4,6 +4,7 @@ import com.ingsoftware.validador_fotos.dto.admin.FotoPendienteResponse;
 import com.ingsoftware.validador_fotos.entity.DatosPersona;
 import com.ingsoftware.validador_fotos.repository.DatosPersonaRepository;
 import java.util.List;
+import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +27,18 @@ public class AdminFotoRevisionService {
                 .stream()
                 .map(this::mapToResponse)
                 .toList();
+    }
+
+    public FotoPendienteResponse obtenerDetalleFotoPendiente(Integer datosPersonaId) {
+        DatosPersona datosPersona = datosPersonaRepository
+                .findByIdAndEstadoIdAndFotoIsNotNullAndUsuarioRolDescripcionIgnoreCase(
+                        datosPersonaId,
+                        ESTADO_PENDIENTE_ID,
+                        ROL_ESTUDIANTE
+                )
+                .orElseThrow(() -> new NoSuchElementException("No se encontro una foto pendiente para el estudiante indicado"));
+
+        return mapToResponse(datosPersona);
     }
 
     private FotoPendienteResponse mapToResponse(DatosPersona datosPersona) {

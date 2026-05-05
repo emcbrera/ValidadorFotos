@@ -13,4 +13,10 @@ public interface DatosPersonaRepository extends JpaRepository<DatosPersona, Inte
             Integer estadoId,
             String rolDescripcion
     );
+
+    Optional<DatosPersona> findByIdAndEstadoIdAndFotoIsNotNullAndUsuarioRolDescripcionIgnoreCase(
+            Integer id,
+            Integer estadoId,
+            String rolDescripcion
+    );
 }
