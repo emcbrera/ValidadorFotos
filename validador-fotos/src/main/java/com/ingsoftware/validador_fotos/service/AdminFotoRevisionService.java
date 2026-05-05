@@ -2,7 +2,9 @@ package com.ingsoftware.validador_fotos.service;
 
 import com.ingsoftware.validador_fotos.dto.admin.FotoPendienteResponse;
 import com.ingsoftware.validador_fotos.entity.DatosPersona;
+import com.ingsoftware.validador_fotos.entity.Estado;
 import com.ingsoftware.validador_fotos.repository.DatosPersonaRepository;
+import com.ingsoftware.validador_fotos.repository.EstadoRepository;
 import java.util.List;
 import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
@@ -12,11 +14,14 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AdminFotoRevisionService {
 
+    private static final Integer ESTADO_APROBADA_ID = 1;
+    private static final Integer ESTADO_RECHAZADA_ID = 2;
     private static final Integer ESTADO_PENDIENTE_ID = 5;
     private static final String ROL_ESTUDIANTE = "ESTUDIANTE";
     private static final String FOTO_PUBLIC_PATH = "/uploads/fotos/";
 
     private final DatosPersonaRepository datosPersonaRepository;
+    private final EstadoRepository estadoRepository;
 
     public List<FotoPendienteResponse> listarFotosPendientes() {
         return datosPersonaRepository
@@ -30,15 +35,42 @@ public class AdminFotoRevisionService {
     }
 
     public FotoPendienteResponse obtenerDetalleFotoPendiente(Integer datosPersonaId) {
-        DatosPersona datosPersona = datosPersonaRepository
+        return mapToResponse(obtenerFotoPendiente(datosPersonaId));
+    }
+
+    public FotoPendienteResponse aprobarFoto(Integer datosPersonaId) {
+        DatosPersona datosPersona = obtenerFotoPendiente(datosPersonaId);
+        Estado estadoAprobada = obtenerEstado(ESTADO_APROBADA_ID, "aprobada");
+
+        datosPersona.setEstado(estadoAprobada);
+        datosPersona.setObservacionRevision(null);
+
+        return mapToResponse(datosPersonaRepository.save(datosPersona));
+    }
+
+    public FotoPendienteResponse rechazarFoto(Integer datosPersonaId, String observacion) {
+        DatosPersona datosPersona = obtenerFotoPendiente(datosPersonaId);
+        Estado estadoRechazada = obtenerEstado(ESTADO_RECHAZADA_ID, "rechazada");
+
+        datosPersona.setEstado(estadoRechazada);
+        datosPersona.setObservacionRevision(observacion.trim());
+
+        return mapToResponse(datosPersonaRepository.save(datosPersona));
+    }
+
+    private DatosPersona obtenerFotoPendiente(Integer datosPersonaId) {
+        return datosPersonaRepository
                 .findByIdAndEstadoIdAndFotoIsNotNullAndUsuarioRolDescripcionIgnoreCase(
                         datosPersonaId,
                         ESTADO_PENDIENTE_ID,
                         ROL_ESTUDIANTE
                 )
                 .orElseThrow(() -> new NoSuchElementException("No se encontro una foto pendiente para el estudiante indicado"));
+    }
 
-        return mapToResponse(datosPersona);
+    private Estado obtenerEstado(Integer estadoId, String descripcion) {
+        return estadoRepository.findById(estadoId)
+                .orElseThrow(() -> new IllegalStateException("No fue posible encontrar el estado " + descripcion));
     }
 
     private FotoPendienteResponse mapToResponse(DatosPersona datosPersona) {
@@ -55,6 +87,7 @@ public class AdminFotoRevisionService {
                 .celular(datosPersona.getCelular())
                 .foto(datosPersona.getFoto())
                 .fotoUrl(construirFotoUrl(datosPersona.getFoto()))
+                .observacionRevision(datosPersona.getObservacionRevision())
                 .estado(datosPersona.getEstado() != null ? datosPersona.getEstado().getDescripcion() : null)
                 .build();
     }

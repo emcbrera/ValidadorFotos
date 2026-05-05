@@ -16,6 +16,7 @@ public record FotoPendienteResponse(
         String celular,
         String foto,
         String fotoUrl,
+        String observacionRevision,
         String estado
 ) {
 }

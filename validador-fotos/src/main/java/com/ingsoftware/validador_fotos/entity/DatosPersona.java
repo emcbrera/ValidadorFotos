@@ -58,6 +58,9 @@ public class DatosPersona {
     @Column(name = "dtpe_foto", length = 255)
     private String foto;
 
+    @Column(name = "dtpe_observacion_revision", length = 500)
+    private String observacionRevision;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "dtpe_id_estado_fk")
     private Estado estado;
