@@ -16,13 +16,19 @@
   <main class="content">
     <div class="form-container card-glass">
       <div class="form-header">
-        <h1 class="form-title">Registro de Datos Personales</h1>
-        <p class="form-subtitle">Completa tu información para la validación de identidad.</p>
+        <h1 class="form-title">Perfil del Estudiante</h1>
+        <p class="form-subtitle">Completa o actualiza tu información para la validación de identidad.</p>
       </div>
 
+      <!-- Alertas -->
       <div class="alert-success" *ngIf="showSuccess">
         <i class="bi bi-check-circle-fill"></i>
-        <span>¡Datos guardados temporalmente con éxito! (Modo Simulación)</span>
+        <span>{{ successMessage }}</span>
+      </div>
+
+      <div class="alert-error" *ngIf="showError">
+        <i class="bi bi-exclamation-triangle-fill"></i>
+        <span>{{ errorMessage }}</span>
       </div>
 
       <form [formGroup]="registrationForm" (ngSubmit)="onSubmit()" class="registration-form">
@@ -57,8 +63,8 @@
           <h2 class="section-title"><i class="bi bi-card-heading"></i> Identificación y Género</h2>
           <div class="form-row">
             <div class="form-group">
-              <label for="tipoDoc">Tipo de Documento*</label>
-              <select id="tipoDoc" formControlName="tipoDoc">
+              <label for="tipoDocumento">Tipo de Documento*</label>
+              <select id="tipoDocumento" formControlName="tipoDocumento">
                 <option value="">Seleccione...</option>
                 <option value="CC">Cédula de Ciudadanía</option>
                 <option value="TI">Tarjeta de Identidad</option>
@@ -66,8 +72,8 @@
               </select>
             </div>
             <div class="form-group">
-              <label for="numeroDoc">Número de Documento*</label>
-              <input type="text" id="numeroDoc" formControlName="numeroDoc" placeholder="123456789">
+              <label for="numeroDocumento">Número de Documento*</label>
+              <input type="text" id="numeroDocumento" formControlName="numeroDocumento" placeholder="123456789">
             </div>
           </div>
           <div class="form-row">
@@ -94,14 +100,28 @@
             <label for="correo">Correo Electrónico*</label>
             <input type="email" id="correo" formControlName="correo" placeholder="usuario@ejemplo.com">
           </div>
+          
           <div class="form-group full-width">
             <label for="foto">Fotografía de Perfil</label>
+            
+            <!-- Vista de foto actual si existe -->
+            <div class="current-photo-container" *ngIf="currentPhotoUrl" (click)="openImageModal()" title="Haz clic para ver la imagen en grande">
+              <div class="photo-wrapper">
+                <img [src]="currentPhotoUrl" alt="Foto actual" class="current-photo">
+                <div class="photo-overlay">
+                  <i class="bi bi-zoom-in"></i>
+                </div>
+              </div>
+              <span class="photo-badge">Foto Actual</span>
+            </div>
+
             <div class="file-upload-wrapper">
               <input type="file" id="foto" (change)="onFileChange($event)" accept="image/*" class="file-input">
               <div class="file-dummy">
                 <i class="bi bi-camera-fill"></i>
-                <span>Haz clic para subir o arrastra una imagen</span>
-                <p class="file-name" *ngIf="registrationForm.get('foto')?.value">{{ registrationForm.get('foto')?.value }}</p>
+                <span *ngIf="!selectedFileName && !isEditMode">Haz clic para subir o arrastra una imagen</span>
+                <span *ngIf="!selectedFileName && isEditMode">Haz clic aquí si deseas actualizar tu foto</span>
+                <p class="file-name" *ngIf="selectedFileName">{{ selectedFileName }}</p>
               </div>
             </div>
           </div>
@@ -109,7 +129,8 @@
 
         <div class="form-actions">
           <button type="submit" class="btn-submit" [disabled]="isSubmitting">
-            <span *ngIf="!isSubmitting">Guardar Información (Temporal)</span>
+            <span *ngIf="!isSubmitting && !isEditMode">Registrar Mis Datos</span>
+            <span *ngIf="!isSubmitting && isEditMode">Actualizar Información</span>
             <span *ngIf="isSubmitting" class="spinner-container">
               <span class="spinner"></span> Procesando...
             </span>
@@ -119,4 +140,14 @@
       </form>
     </div>
   </main>
+
+  <!-- Modal para ver imagen en grande -->
+  <div class="image-modal-overlay" *ngIf="isImageModalOpen" (click)="closeImageModal()">
+    <div class="image-modal-content" (click)="$event.stopPropagation()">
+      <button class="btn-close-modal" (click)="closeImageModal()">
+        <i class="bi bi-x-lg"></i>
+      </button>
+      <img [src]="currentPhotoUrl" alt="Foto en grande" class="image-modal-full">
+    </div>
+  </div>
 </div>
