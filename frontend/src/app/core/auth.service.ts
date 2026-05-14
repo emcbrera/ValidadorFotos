@@ -14,7 +14,7 @@ import { User } from '../schemas/response/user-response';
 })
 export class AuthService {
 
-  private readonly API_URL = 'http://localhost:8080/api/auth';
+  private readonly API_URL = '/api/auth';
   private readonly SESSION_KEY = 'auth_user';
   private readonly TOKEN_KEY = 'auth_token';
 
