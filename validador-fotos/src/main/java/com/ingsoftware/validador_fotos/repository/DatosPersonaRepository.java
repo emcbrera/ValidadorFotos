@@ -9,10 +9,7 @@ public interface DatosPersonaRepository extends JpaRepository<DatosPersona, Inte
 
     Optional<DatosPersona> findByUsuarioId(Integer usuarioId);
 
-    List<DatosPersona> findByEstadoIdAndFotoIsNotNullAndUsuarioRolDescripcionIgnoreCaseOrderByPrimerApellidoAscPrimerNombreAsc(
-            Integer estadoId,
-            String rolDescripcion
-    );
+    List<DatosPersona> findAllByOrderByPrimerApellidoAscPrimerNombreAsc();
 
     Optional<DatosPersona> findByIdAndEstadoIdAndFotoIsNotNullAndUsuarioRolDescripcionIgnoreCase(
             Integer id,

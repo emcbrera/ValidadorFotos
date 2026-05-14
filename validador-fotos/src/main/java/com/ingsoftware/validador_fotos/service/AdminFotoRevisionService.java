@@ -25,10 +25,7 @@ public class AdminFotoRevisionService {
 
     public List<FotoPendienteResponse> listarFotosPendientes() {
         return datosPersonaRepository
-                .findByEstadoIdAndFotoIsNotNullAndUsuarioRolDescripcionIgnoreCaseOrderByPrimerApellidoAscPrimerNombreAsc(
-                        ESTADO_PENDIENTE_ID,
-                        ROL_ESTUDIANTE
-                )
+                .findAllByOrderByPrimerApellidoAscPrimerNombreAsc()
                 .stream()
                 .map(this::mapToResponse)
                 .toList();
