@@ -154,6 +154,7 @@ public class DatosPersonaService {
                 .celular(datosPersona.getCelular())
                 .foto(datosPersona.getFoto())
                 .fotoUrl(construirFotoUrl(datosPersona.getFoto()))
+                .observacionRevision(datosPersona.getObservacionRevision())
                 .estado(datosPersona.getEstado() != null ? datosPersona.getEstado().getDescripcion() : null)
                 .mensaje(mensaje)
                 .build();
