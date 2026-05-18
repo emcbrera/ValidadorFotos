@@ -17,6 +17,7 @@ export interface DatosPersonaResponse {
   foto?: string;
   fotoUrl?: string;
   estado?: string;
+  observacionRevision?: string;
   mensaje?: string;
 }
 

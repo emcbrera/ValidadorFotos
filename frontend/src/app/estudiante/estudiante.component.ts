@@ -22,6 +22,8 @@ export class EstudianteComponent implements OnInit {
   errorMessage = '';
 
   isEditMode = false;
+  estadoActual: string | null = null;
+  observacionRechazo: string | null = null;
   currentPhotoUrl: string | null = null;
   selectedFile: File | null = null;
   selectedFileName: string | null = null;
@@ -67,8 +69,11 @@ export class EstudianteComponent implements OnInit {
   cargarDatosActuales(): void {
     this.estudianteService.obtenerDatosPersonales().subscribe({
       next: (datos: DatosPersonaResponse) => {
-        if (datos && datos.id) {
+        if (datos) {
           this.isEditMode = true;
+          this.estadoActual = datos.estado || 'Pendiente';
+          this.observacionRechazo = datos.observacionRevision || null;
+
           this.registrationForm.patchValue({
             primerNombre: datos.primerNombre,
             segundoNombre: datos.segundoNombre,
@@ -158,6 +163,11 @@ export class EstudianteComponent implements OnInit {
     this.isSubmitting = false;
     this.showSuccess = true;
     this.successMessage = mensaje;
+    
+    // Al guardar o actualizar, el estado vuelve a Pendiente
+    this.estadoActual = 'Pendiente';
+    this.observacionRechazo = null;
+
     if (fotoUrl) {
        this.currentPhotoUrl = fotoUrl.startsWith('/') 
          ? 'http://localhost:8080' + fotoUrl 

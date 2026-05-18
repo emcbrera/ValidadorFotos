@@ -17,18 +17,38 @@
     <div class="form-container card-glass">
       <div class="form-header">
         <h1 class="form-title">Perfil del Estudiante</h1>
-        <p class="form-subtitle">Completa o actualiza tu información para la validación de identidad.</p>
+        <p class="subtitle">Verifica y actualiza tu información personal</p>
       </div>
 
-      <!-- Alertas -->
-      <div class="alert-success" *ngIf="showSuccess">
-        <i class="bi bi-check-circle-fill"></i>
-        <span>{{ successMessage }}</span>
+      <!-- Alertas de éxito y error -->
+      <div class="alert-box success" *ngIf="showSuccess">
+        <i class="bi bi-check-circle-fill"></i> {{ successMessage }}
+      </div>
+      <div class="alert-box error" *ngIf="showError">
+        <i class="bi bi-exclamation-triangle-fill"></i> {{ errorMessage }}
       </div>
 
-      <div class="alert-error" *ngIf="showError">
-        <i class="bi bi-exclamation-triangle-fill"></i>
-        <span>{{ errorMessage }}</span>
+      <!-- Banner de Estado (solo si hay datos previos) -->
+      <div class="status-banner" *ngIf="isEditMode" [ngClass]="{
+        'status-aprobado': estadoActual === 'Aprobado' || estadoActual === 'Aprobada',
+        'status-rechazado': estadoActual === 'Rechazado' || estadoActual === 'Rechazada',
+        'status-pendiente': estadoActual === 'Pendiente'
+      }">
+        <div class="status-header">
+          <i class="bi" [ngClass]="{
+            'bi-check-circle-fill': estadoActual === 'Aprobado' || estadoActual === 'Aprobada',
+            'bi-x-circle-fill': estadoActual === 'Rechazado' || estadoActual === 'Rechazada',
+            'bi-clock-fill': estadoActual === 'Pendiente'
+          }"></i>
+          <span>Estado de Fotografía: <strong>{{ estadoActual }}</strong></span>
+        </div>
+        <div class="status-message" *ngIf="(estadoActual === 'Rechazado' || estadoActual === 'Rechazada') && observacionRechazo">
+          <strong>Motivo:</strong> {{ observacionRechazo }}
+          <br><small>Por favor, sube una nueva fotografía que cumpla con los requisitos para volver a ser evaluada.</small>
+        </div>
+        <div class="status-message" *ngIf="estadoActual === 'Pendiente'">
+          <small>Tu fotografía está en cola de revisión por parte de la administración.</small>
+        </div>
       </div>
 
       <form [formGroup]="registrationForm" (ngSubmit)="onSubmit()" class="registration-form">

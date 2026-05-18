@@ -1,145 +1,153 @@
-<div class="admin-dashboard">
-  <!-- Sidebar -->
-  <aside class="sidebar">
-    <div class="sidebar-header">
-      <div class="logo-ico">
-        <i class="bi bi-shield-lock-fill"></i>
-      </div>
-      <span class="logo-text">Validador<b>Fotos</b></span>
+<div class="admin-page">
+  <!-- Top Bar -->
+  <header class="top-bar">
+    <div class="logo">
+      <i class="bi bi-shield-lock-fill"></i>
+      <span>Validador<b>Fotos</b> Admin</span>
     </div>
-
-    <nav class="sidebar-nav">
-      <a href="#" class="nav-item active">
-        <i class="bi bi-grid-1x2-fill"></i>
-        <span>Dashboard</span>
-      </a>
-      <a href="#" class="nav-item">
-        <i class="bi bi-people-fill"></i>
-        <span>Estudiantes</span>
-      </a>
-      <a href="#" class="nav-item">
-        <i class="bi bi-card-checklist"></i>
-        <span>Validaciones</span>
-      </a>
-      <a href="#" class="nav-item">
-        <i class="bi bi-gear-fill"></i>
-        <span>Configuración</span>
-      </a>
-    </nav>
-
-    <div class="sidebar-footer">
-      <button (click)="logout()" class="btn-logout">
-        <i class="bi bi-box-arrow-left"></i>
-        <span>Cerrar Sesión</span>
+    <div class="user-actions">
+      <span class="user-welcome">Hola, <b>{{ userName }}</b></span>
+      <button (click)="logout()" class="btn-icon-logout" title="Cerrar Sesión">
+        <i class="bi bi-box-arrow-right"></i>
       </button>
     </div>
-  </aside>
+  </header>
 
-  <!-- Main Content -->
-  <main class="main-content">
-    <header class="top-nav">
-      <div class="search-bar">
-        <i class="bi bi-search"></i>
-        <input type="text" placeholder="Buscar validaciones...">
-      </div>
-      <div class="user-profile">
-        <div class="notifications">
-          <i class="bi bi-bell"></i>
-          <span class="badge">3</span>
-        </div>
-        <div class="v-divider"></div>
-        <span class="user-name">{{ userName }}</span>
-        <div class="avatar">
-           <i class="bi bi-person-circle"></i>
-        </div>
-      </div>
-    </header>
+  <main class="content">
+    <div class="dashboard-header">
+      <h1 class="page-title">Gestión de Validaciones</h1>
+      <p class="page-subtitle">Revisa las fotografías subidas por los estudiantes.</p>
+    </div>
 
-    <div class="content-wrapper">
-      <div class="welcome-section">
-        <h1 class="welcome-title">Bienvenido, {{ userName }}</h1>
-        <p class="welcome-text">Panel de administración para la validación de registros fotográficos.</p>
-      </div>
-
-      <!-- Mock Stats -->
-      <div class="stats-grid">
-        <div class="stat-card">
-          <div class="stat-icon purple">
-            <i class="bi bi-person-plus-fill"></i>
-          </div>
-          <div class="stat-info">
-            <span class="stat-value">124</span>
-            <span class="stat-label">Nuevos Registros</span>
-          </div>
+    <!-- Tabla Principal -->
+    <div class="card-table">
+      <div class="table-header-tools">
+        <div class="search-box">
+          <i class="bi bi-search"></i>
+          <input type="text" placeholder="Buscar...">
         </div>
-        <div class="stat-card">
-          <div class="stat-icon blue">
-            <i class="bi bi-clock-history"></i>
-          </div>
-          <div class="stat-info">
-            <span class="stat-value">15</span>
-            <span class="stat-label">Pendientes</span>
-          </div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon green">
-            <i class="bi bi-check-circle-fill"></i>
-          </div>
-          <div class="stat-info">
-            <span class="stat-value">89</span>
-            <span class="stat-label">Aprobados</span>
-          </div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon red">
-            <i class="bi bi-x-circle-fill"></i>
-          </div>
-          <div class="stat-info">
-            <span class="stat-value">2</span>
-            <span class="stat-label">Rechazados</span>
-          </div>
+        <div class="filter-box">
+          <i class="bi bi-funnel"></i>
+          <select [(ngModel)]="estadoFiltro" class="filter-select">
+            <option value="Todos">Todos los Estados</option>
+            <option value="Pendientes">Pendientes</option>
+            <option value="Aprobadas">Aprobados</option>
+            <option value="Rechazadas">Rechazados</option>
+          </select>
         </div>
       </div>
 
-      <!-- Placeholder for more admin stuff -->
-      <div class="recent-table-card card-glass">
-        <div class="card-header">
-          <h2 class="card-title">Validaciones Recientes (Datos de Prueba)</h2>
-          <button class="btn-view-all">Ver todos</button>
-        </div>
-        <div class="table-container">
-          <table class="custom-table">
-            <thead>
-              <tr>
-                <th>Estudiante</th>
-                <th>Fecha</th>
-                <th>Estado</th>
-                <th>Acciones</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Juan Perez</td>
-                <td>2024-05-20</td>
-                <td><span class="status-badge pending">Pendiente</span></td>
-                <td><button class="btn-action">Revisar</button></td>
-              </tr>
-              <tr>
-                <td>Maria Garcia</td>
-                <td>2024-05-19</td>
-                <td><span class="status-badge approved">Aprobado</span></td>
-                <td><button class="btn-action">Detalles</button></td>
-              </tr>
-              <tr>
-                <td>Carlos Lopez</td>
-                <td>2024-05-18</td>
-                <td><span class="status-badge pending">Pendiente</span></td>
-                <td><button class="btn-action">Revisar</button></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+      <div class="table-responsive" *ngIf="!isLoading">
+        <table class="modern-table">
+          <thead>
+            <tr>
+              <th>No. Identificación</th>
+              <th>Nombres</th>
+              <th>Apellidos</th>
+              <th>Estado</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let est of estudiantesFiltrados">
+              <td>{{ est.numeroDocumento }}</td>
+              <td>{{ est.primerNombre }} {{ est.segundoNombre }}</td>
+              <td>{{ est.primerApellido }} {{ est.segundoApellido }}</td>
+              <td>
+                <span class="badge" [ngClass]="{
+                  'badge-pendiente': est.estado === 'Pendiente',
+                  'badge-aprobado': est.estado === 'Aprobado' || est.estado === 'Aprobada',
+                  'badge-rechazado': est.estado === 'Rechazado' || est.estado === 'Rechazada'
+                }">
+                  {{ est.estado || 'Pendiente' }}
+                </span>
+              </td>
+              <td>
+                <button class="btn-link-action" (click)="abrirDetalle(est)">Revisar</button>
+              </td>
+            </tr>
+            <tr *ngIf="estudiantes.length === 0">
+              <td colspan="5" class="empty-state">No hay estudiantes pendientes por revisión.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      
+      <div class="loading-state" *ngIf="isLoading">
+        <div class="spinner"></div>
+        <p>Cargando datos...</p>
       </div>
     </div>
   </main>
+
+  <!-- Modal de Detalle (Hoja de Vida / Revisión) -->
+  <div class="modal-overlay" *ngIf="isDetailModalOpen && selectedStudent" (click)="cerrarDetalle()">
+    <div class="modal-content detail-modal" (click)="$event.stopPropagation()">
+      <div class="modal-header-profile">
+        <div class="profile-info">
+          <h2>{{ selectedStudent.primerNombre }} {{ selectedStudent.primerApellido }}</h2>
+          <div class="profile-meta">
+            <span><i class="bi bi-person-vcard"></i> {{ selectedStudent.tipoDocumento }}. {{ selectedStudent.numeroDocumento }}</span>
+            <span><i class="bi bi-envelope"></i> {{ selectedStudent.correo }}</span>
+            <span><i class="bi bi-telephone"></i> {{ selectedStudent.celular }}</span>
+          </div>
+        </div>
+        <button class="btn-close" (click)="cerrarDetalle()"><i class="bi bi-x-lg"></i></button>
+      </div>
+
+      <div class="modal-body">
+        <div class="student-info-grid">
+          <div class="info-group">
+            <label>Nombres Completos</label>
+            <p>{{ selectedStudent.primerNombre }} {{ selectedStudent.segundoNombre }}</p>
+          </div>
+          <div class="info-group">
+            <label>Apellidos Completos</label>
+            <p>{{ selectedStudent.primerApellido }} {{ selectedStudent.segundoApellido }}</p>
+          </div>
+        </div>
+
+        <div class="photo-review-section">
+          <label>Fotografía a Revisar</label>
+          <div class="photo-box">
+            <img [src]="getPhotoUrl(selectedStudent.fotoUrl)" alt="Foto del estudiante">
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-secondary-outline" (click)="abrirRechazoModal()"><i class="bi bi-x"></i> Rechazar</button>
+        <button class="btn-primary" (click)="aprobarFoto(selectedStudent.datosPersonaId)"><i class="bi bi-check"></i> Aprobar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de Rechazo (Observación) -->
+  <div class="modal-overlay sub-modal" *ngIf="isRejectModalOpen" (click)="cerrarRechazoModal()">
+    <div class="modal-content reject-modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Motivo de Rechazo</h3>
+        <button class="btn-close" (click)="cerrarRechazoModal()"><i class="bi bi-x-lg"></i></button>
+      </div>
+      
+      <form [formGroup]="rechazoForm" (ngSubmit)="confirmarRechazo()">
+        <div class="modal-body">
+          <p class="modal-instruction">Por favor, indica al estudiante el motivo por el cual su fotografía fue rechazada (ej. muy oscura, no cumple el fondo, etc.).</p>
+          <div class="form-group">
+            <textarea formControlName="observacion" rows="4" placeholder="Escribe tu observación aquí..." class="form-control"></textarea>
+            <div class="field-error" *ngIf="rechazoForm.get('observacion')?.invalid && rechazoForm.get('observacion')?.touched">
+              La observación es obligatoria y no puede superar los 500 caracteres.
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-text" (click)="cerrarRechazoModal()">Cancelar</button>
+          <button type="submit" class="btn-danger" [disabled]="isSubmittingRechazo">
+            <span *ngIf="!isSubmittingRechazo">Confirmar Rechazo</span>
+            <span *ngIf="isSubmittingRechazo">Procesando...</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
 </div>
