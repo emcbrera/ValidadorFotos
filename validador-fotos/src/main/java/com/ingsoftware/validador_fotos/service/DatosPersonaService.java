@@ -113,6 +113,11 @@ public class DatosPersonaService {
 
         String nombreNuevaFoto = fotoStorageService.guardarFoto(nuevaFoto, userDetails.getId());
         datosPersona.setFoto(nombreNuevaFoto);
+        
+        Estado estadoPendiente = estadoRepository.findById(ESTADO_PENDIENTE_ID)
+                .orElseThrow(() -> new IllegalStateException("No fue posible encontrar el estado pendiente"));
+        datosPersona.setEstado(estadoPendiente);
+        datosPersona.setObservacionRevision(null);
 
         DatosPersona registroActualizado = datosPersonaRepository.save(datosPersona);
 
