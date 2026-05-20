@@ -17,6 +17,7 @@ export class AdminComponent implements OnInit {
   estudiantes: FotoPendienteResponse[] = [];
   isLoading = true;
   estadoFiltro: string = 'Todos'; // Estado seleccionado en el filtro
+  terminoBusqueda: string = ''; // Término de búsqueda
 
   // Detail Modal State
   selectedStudent: FotoPendienteResponse | null = null;
@@ -60,17 +61,30 @@ export class AdminComponent implements OnInit {
   }
 
   get estudiantesFiltrados(): FotoPendienteResponse[] {
-    if (this.estadoFiltro === 'Todos') {
-      return this.estudiantes;
+    let filtrados = this.estudiantes;
+
+    // 1. Filtrar por estado
+    if (this.estadoFiltro !== 'Todos') {
+      filtrados = filtrados.filter(est => {
+        const estado = est.estado?.toLowerCase() || 'pendiente';
+        if (this.estadoFiltro === 'Aprobadas' && estado.includes('aprobada')) return true;
+        if (this.estadoFiltro === 'Rechazadas' && estado.includes('rechazada')) return true;
+        if (this.estadoFiltro === 'Pendientes' && estado.includes('pendiente')) return true;
+        return false;
+      });
     }
-    return this.estudiantes.filter(est => {
-      // Normalizamos porque en la BD está "Aprobada" o "Rechazada"
-      const estado = est.estado?.toLowerCase() || 'pendiente';
-      if (this.estadoFiltro === 'Aprobadas' && estado.includes('aprobada')) return true;
-      if (this.estadoFiltro === 'Rechazadas' && estado.includes('rechazada')) return true;
-      if (this.estadoFiltro === 'Pendientes' && estado.includes('pendiente')) return true;
-      return false;
-    });
+
+    // 2. Filtrar por texto
+    if (this.terminoBusqueda.trim() !== '') {
+      const termino = this.terminoBusqueda.toLowerCase().trim();
+      filtrados = filtrados.filter(est => {
+        const nombreCompleto = `${est.primerNombre || ''} ${est.segundoNombre || ''} ${est.primerApellido || ''} ${est.segundoApellido || ''}`.toLowerCase();
+        const documento = est.numeroDocumento?.toString() || '';
+        return nombreCompleto.includes(termino) || documento.includes(termino);
+      });
+    }
+
+    return filtrados;
   }
 
   abrirDetalle(student: FotoPendienteResponse): void {
